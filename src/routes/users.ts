@@ -1,14 +1,13 @@
 import { Router } from 'express';
-import { userSchema } from '../validator/schema';
-import { createValidator } from 'express-joi-validation';
+import { userSchema } from '../validation/schema';
+import { validateSchema } from '../middleware/validation';
 import usersController from '../controllers/users';
 
 export const usersRouter = Router();
-const validator = createValidator();
 
 usersRouter
     .get('/', usersController.getAll)
     .get('/:id', usersController.getById)
-    .post('/', validator.body(userSchema), usersController.create)
-    .put('/', validator.body(userSchema), usersController.update)
+    .post('/', validateSchema(userSchema), usersController.create)
+    .put('/:id', validateSchema(userSchema), usersController.update)
     .delete('/:id', usersController.remove);

@@ -10,7 +10,6 @@ const create = async (user: User) => userInMemory.push(user);
 
 const update = async (id: string, payload: User) => {
     const index = userInMemory.findIndex((user) => user.id === id && !user.isDeleted);
-    console.log(index);
     if (index === -1) return null;
     const user = userInMemory[index];
     userInMemory[index] = {
@@ -23,7 +22,6 @@ const update = async (id: string, payload: User) => {
 
 const remove = async (id: string) => {
     const index = userInMemory.findIndex((user) => user.id === id && !user.isDeleted);
-    console.log(index);
     if (index === -1) return false;
     const user = userInMemory[index];
     if (user) {
