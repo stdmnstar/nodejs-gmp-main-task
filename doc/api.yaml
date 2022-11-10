@@ -1,0 +1,151 @@
+openapi: 3.0.0
+info:
+  title: NodeJs Global mentoring program
+  description: NodeJs Global mentoring program
+  version: 1.0.0
+
+servers:
+  - url: /
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        login:
+          type: string
+        password:
+          type: string
+        age:
+          type: number
+        isDeleted:
+          type: boolean
+paths:
+  /users:
+    get:
+      parameters:
+        - name: loginSubstring
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: number
+      tags:
+        - Users
+      summary: Get all users
+      description: Gets all users (remove password from response)
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    post:
+      tags:
+        - Users
+      summary: Create user
+      description: Creates a new user (remove password from response)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                  description: The user's login
+                password:
+                  type: string
+                  description: The user's password
+                age:
+                  type: number
+                  description: The user's age
+              required:
+                - login
+                - password
+                - age
+      responses:
+        201:
+          description: The user has been created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad request
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      description: Gets a user by ID
+        e.g. “/users/123” (remove password from response)
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        404:
+          description: User not found
+    put:
+      tags:
+        - Users
+      summary: Update a user
+      description: Updates a user by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                  description: The user's login
+                password:
+                  type: string
+                  description: The user's password
+                age:
+                  type: number
+                  description: The user's age
+              required:
+                - login
+                - password
+                - age
+      responses:
+        200:
+          description: The user has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad request
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: Remove user by ID.
+      responses:
+        204:
+          description: The user has been deleted
+        404:
+          description: User not found
