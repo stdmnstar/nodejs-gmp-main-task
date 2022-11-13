@@ -24,10 +24,12 @@ const getById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
         const user = await userService.getById(id as string);
-        if (!user) {
+
+        if (user) {
+            res.json(user);
+        } else {
             res.status(404).json(userNotFoundMessage);
         }
-        res.json(user);
     } catch (error) {
         next(error);
     }
@@ -62,8 +64,12 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
         const isDelete = await userService.remove(id as string);
-        // eslint-disable-next-line no-unused-expressions
-        isDelete ? res.status(204).json() : res.status(404).json(userNotFoundMessage);
+
+        if (isDelete) {
+            res.status(204).json();
+        } else {
+            res.status(404).json(userNotFoundMessage);
+        }
     } catch (error) {
         next(error);
     }

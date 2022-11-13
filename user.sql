@@ -1,11 +1,11 @@
 -- DROP TABLE users;
 
 create table if not exists users (
-    id SERIAL primary key,
+  id SERIAL primary key,
 	login VARCHAR not null,
 	password VARCHAR not null,
-	age INT CHECK (age >= 4 and age <= 130),
-	"isDeleted" boolean default false
+	age INT not null,
+	"isDeleted" boolean default false not null
 );
 
 insert into users (login, password, age, "isDeleted") values

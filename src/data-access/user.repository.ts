@@ -11,17 +11,24 @@ export interface IUserRepository {
 }
 export class UserRepository implements IUserRepository {
     getAll = async (loginSubstring: string, limit: number) => {
-        const query: WhereOptions = {
-            order: ['login'],
-            limit,
-            where: loginSubstring && {
+        let where: WhereOptions = {
+            isDeleted: false
+        };
+
+        if (loginSubstring) {
+            where = {
+                ...where,
                 login: {
                     [Op.iLike]: `%${loginSubstring}%`
                 }
-            }
-        };
+            };
+        }
 
-        return User.findAll(query);
+        return User.findAll({
+            where,
+            order: ['login'],
+            limit
+        });
     };
 
     getById = async (id: string) => {
