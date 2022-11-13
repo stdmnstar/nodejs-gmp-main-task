@@ -1,40 +1,62 @@
-import { userInMemory } from '../db/user';
-import { User } from '../types/types';
+/* eslint-disable no-unused-vars */
+import { Op, WhereOptions } from 'sequelize';
+import { User, IUser, UserModel } from '../model/user';
 
-const getAll = async () => userInMemory.filter((user: User) => !user.isDeleted);
-// const getAll = async () => userInMemory.map((user: User) => user);
+export interface IUserRepository {
+    getAll(loginSubstring: string, limit: number): Promise<UserModel[]>,
+    getById(id: string): Promise<UserModel | null>,
+    create(user: IUser): Promise<UserModel>,
+    updateOne(id: string, payload: IUser): Promise<UserModel | undefined>,
+    removeOne(id: string): Promise<boolean>,
+}
+export class UserRepository implements IUserRepository {
+    getAll = async (loginSubstring: string, limit: number) => {
+        const query: WhereOptions = {
+            order: ['login'],
+            limit,
+            where: loginSubstring && {
+                login: {
+                    [Op.iLike]: `%${loginSubstring}%`
+                }
+            }
+        };
 
-const getById = async (id: string) => userInMemory.find((user: User) => user.id === id);
-
-const create = async (user: User) => userInMemory.push(user);
-
-const update = async (id: string, payload: User) => {
-    const index = userInMemory.findIndex((user) => user.id === id && !user.isDeleted);
-    if (index === -1) return null;
-    const user = userInMemory[index];
-    userInMemory[index] = {
-        ...user,
-        ...payload
+        return User.findAll(query);
     };
 
-    return getById(id);
-};
+    getById = async (id: string) => {
+        return await User.findOne({
+            where: {
+                id,
+                isDeleted: false
+            }
+        });
+    };
 
-const remove = async (id: string) => {
-    const index = userInMemory.findIndex((user) => user.id === id && !user.isDeleted);
-    if (index === -1) return false;
-    const user = userInMemory[index];
-    if (user) {
-        user.isDeleted = true;
-        return true;
-    }
-    return false;
-};
+    create = async (user: IUser) => {
+        const { login, password, age, isDeleted } = user;
+        return User.create({ login, password, age, isDeleted }, { returning: true });
+    };
 
-export default {
-    getAll,
-    getById,
-    create,
-    update,
-    remove
-};
+    updateOne = async (id: string, payload: IUser) => {
+        const [, [updatedUser]] = await User.update(payload, {
+            where: {
+                id,
+                isDeleted: false
+            },
+            returning: true
+        });
+        return updatedUser;
+    };
+
+    removeOne = async (id: string) => {
+        const [, [deletedUser]] = await User.update({ isDeleted: true }, {
+            where: {
+                id,
+                isDeleted: false
+            },
+            returning: true
+        });
+        return Boolean(deletedUser);
+    };
+}

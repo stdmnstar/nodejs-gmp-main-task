@@ -1,34 +1,27 @@
-// import { userInMemory } from '../db/user';
-import { User } from '../types/types';
-import usersRepo from '../data-access/user.repository';
+/* eslint-disable no-unused-vars */
+import { IUser } from '../model/user';
+import { IUserRepository } from '../data-access/user.repository';
 
-const getAll = () => usersRepo.getAll();
+interface IUserService {
+    getAll(loginSubstring: string, limit: number): Promise<IUser[]>,
+    getById(id: string): Promise<IUser | null>,
+    create(user: IUser): Promise<IUser>,
+    update(id: string, payload: IUser): Promise<IUser | undefined>,
+    remove(id: string): Promise<boolean>,
+}
 
-const getAutoSuggest = async (loginSubstring: string, limit: number) => {
-    let users = await getAll();
-
-    users = users.sort((a, b) => a.login.localeCompare(b.login));
-
-    if (loginSubstring) {
-        users = users.filter((user) => user.login.toLowerCase().includes(loginSubstring.toLowerCase()));
+export class UserService implements IUserService {
+    constructor(private userRepository: IUserRepository) {
+        this.userRepository = userRepository;
     }
 
-    return limit ? users.slice(0, limit) : users;
-};
+    getAll = (loginSubstring: string, limit: number) => this.userRepository.getAll(loginSubstring, limit);
 
-const getById = (id: string) => usersRepo.getById(id);
+    getById = (id: string) => this.userRepository.getById(id);
 
-const create = (data: User) => usersRepo.create(data);
+    create = (data: IUser) => this.userRepository.create({ ...data, isDeleted: false });
 
-const update = (id: string, data: User) => usersRepo.update(id, data);
+    update = (id: string, data: IUser) => this.userRepository.updateOne(id, data);
 
-const remove = (id: string) => usersRepo.remove(id);
-
-export default {
-    getAll,
-    getAutoSuggest,
-    getById,
-    create,
-    update,
-    remove
-};
+    remove = (id: string) => this.userRepository.removeOne(id);
+}

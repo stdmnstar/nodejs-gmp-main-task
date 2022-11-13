@@ -1,7 +1,10 @@
 /* eslint-disable callback-return */
 import { Response, Request, NextFunction } from 'express';
-import { v4 as uuid } from 'uuid';
-import userService from '../services/users';
+import { UserService } from '../services/users';
+import { UserRepository } from '../data-access/user.repository';
+
+const userRepository = new UserRepository();
+const userService = new UserService(userRepository);
 
 const userNotFoundMessage = {
     message: 'Error! User not found.'
@@ -10,7 +13,7 @@ const userNotFoundMessage = {
 const getAll = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { loginSubstring, limit } = req.query;
-        const users = await userService.getAutoSuggest(loginSubstring as string, limit as unknown as number);
+        const users = await userService.getAll(loginSubstring as string, limit as unknown as number);
         res.json(users);
     } catch (error) {
         next(error);
@@ -33,8 +36,7 @@ const getById = async (req: Request, res: Response, next: NextFunction) => {
 const create = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { body } = req;
-        const newUser = { id: uuid(), ...body, isDeleted: false };
-        await userService.create(newUser);
+        const newUser = await userService.create(body);
         res.status(201).json(newUser);
     } catch (error) {
         next(error);
