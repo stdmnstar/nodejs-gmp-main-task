@@ -6,6 +6,6 @@ export const db = new Sequelize({
     username: config.POSTGRES_USER_NAME,
     password: config.POSTGRES_PASSWORD,
     host: config.POSTGRES_HOST,
-    port: (config.POSTGRES_PORT as number | undefined) || 5432,
+    port: (config.POSTGRES_PORT as number | undefined),
     dialect: 'postgres'
 });

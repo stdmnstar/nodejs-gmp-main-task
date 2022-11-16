@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { IUser } from '../model/user';
-import { IUserRepository } from '../data-access/user.repository';
+import { IUserRepository } from '../repository/user';
 
 interface IUserService {
     getAll(loginSubstring: string, limit: number): Promise<IUser[]>,
@@ -19,7 +19,7 @@ export class UserService implements IUserService {
 
     getById = (id: string) => this.userRepository.getById(id);
 
-    create = (data: IUser) => this.userRepository.create({ ...data, isDeleted: false });
+    create = (data: IUser) => this.userRepository.create(data);
 
     update = (id: string, data: IUser) => this.userRepository.updateOne(id, data);
 

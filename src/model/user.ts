@@ -2,7 +2,7 @@ import { DataTypes, Model } from 'sequelize';
 import { db } from '../database/db';
 
 export interface IUser {
-    id?: string;
+    id: string;
     login: string;
     password: string;
     age: number;
@@ -15,14 +15,13 @@ export const User = db.define<UserModel>(
     'users',
     {
         id: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.UUID,
             primaryKey: true,
-            autoIncrement: true,
-            allowNull: false
+            allowNull: false,
+            defaultValue: DataTypes.UUIDV4
         },
         login: {
             type: DataTypes.STRING,
-            unique: true,
             allowNull: false
         },
         password: {

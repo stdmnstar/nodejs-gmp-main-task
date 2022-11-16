@@ -1,7 +1,8 @@
 /* eslint-disable callback-return */
 import { Response, Request, NextFunction } from 'express';
+import { v4 as uuid } from 'uuid';
 import { UserService } from '../services/users';
-import { UserRepository } from '../data-access/user.repository';
+import { UserRepository } from '../repository/user';
 
 const userRepository = new UserRepository();
 const userService = new UserService(userRepository);
@@ -38,7 +39,7 @@ const getById = async (req: Request, res: Response, next: NextFunction) => {
 const create = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { body } = req;
-        const newUser = await userService.create(body);
+        const newUser = await userService.create({ id: uuid(), ...body, isDeleted: false });
         res.status(201).json(newUser);
     } catch (error) {
         next(error);
