@@ -22,6 +22,18 @@ components:
           type: number
         isDeleted:
           type: boolean
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+            enum: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
 paths:
   /users:
     get:
@@ -37,7 +49,7 @@ paths:
       tags:
         - Users
       summary: Get all users
-      description: Gets all users (remove password from response)
+      description: Gets all users
       responses:
         200:
           description: Successful operation
@@ -51,7 +63,7 @@ paths:
       tags:
         - Users
       summary: Create user
-      description: Creates a new user (remove password from response)
+      description: Creates a new user
       requestBody:
         required: true
         content:
@@ -94,7 +106,7 @@ paths:
         - Users
       summary: Get user by ID
       description: Gets a user by ID
-        e.g. “/users/123” (remove password from response)
+        e.g. “/users/123”
       responses:
         200:
           description: Successful operation
@@ -149,3 +161,120 @@ paths:
           description: The user has been deleted
         404:
           description: User not found
+  /groups:
+    get:
+      tags:
+        - Groups
+      summary: Get all groups
+      description: Gets all groups
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Group"
+    post:
+      tags:
+        - Groups
+      summary: Create group
+      description: Creates a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                name:
+                  type: string
+                  description: The group's name
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    enum: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+                  description: The group's permissions
+                  example: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+              required:
+                - name
+                - permissions
+      responses:
+        201:
+          description: The group has been created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        400:
+          description: Bad request
+  /groups/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Groups
+      summary: Get group by ID
+      description: Gets a group by ID
+        e.g. “/groups/123”
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        404:
+          description: Group not found
+    put:
+      tags:
+        - Groups
+      summary: Update a group
+      description: Updates a group by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                name:
+                  type: string
+                  description: The group's name
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    enum: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+                  description: The group's permissions
+                  example: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+              required:
+                - name
+                - permissions
+      responses:
+        200:
+          description: The group has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        400:
+          description: Bad request
+    delete:
+      tags:
+        - Groups
+      summary: Delete group
+      description: Delete group by ID.
+      responses:
+        204:
+          description: The group has been deleted
+        404:
+          description: Group not found
