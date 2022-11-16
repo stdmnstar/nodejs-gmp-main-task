@@ -44,6 +44,20 @@ module.exports = {
                     password: 'qwerty123456',
                     age: 25,
                     isDeleted: false
+                },
+                {
+                    id: '775dc1c5-5ff6-4a3b-9866-ac4d3c876e2f',
+                    login: 'Login1',
+                    password: 'qwerty123456',
+                    age: 75,
+                    isDeleted: false
+                },
+                {
+                    id: 'f0df588e-c4af-4457-8ffe-7365e8764a78',
+                    login: 'Login2',
+                    password: 'qwerty123456',
+                    age: 36,
+                    isDeleted: false
                 }
             ],
             {}
