@@ -8,4 +8,5 @@ groupsRouter
     .get('/:id', groupsController.getById)
     .post('/', groupsController.create)
     .put('/:id', groupsController.update)
-    .delete('/:id', groupsController.remove);
+    .delete('/:id', groupsController.remove)
+    .post('/:groupId/users', groupsController.addUsers);

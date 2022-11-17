@@ -278,10 +278,16 @@ paths:
           description: The group has been deleted
         404:
           description: Group not found
-  /users-group:
-     post:
+  /groups/{id}/users:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
       tags:
-        - GroupUsers
+        - Groups
       summary: Adds Users to Group
       description: Adds Users to Group
       requestBody:
@@ -292,9 +298,6 @@ paths:
               type: object
               title: example
               properties:
-                groupId:
-                  type: string
-                  example: group-id
                 userIds:
                   type: array
                   items:

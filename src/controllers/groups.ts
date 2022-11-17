@@ -75,4 +75,15 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
     }
 };
 
-export default { getAll, getById, create, update, remove };
+const addUsers = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { groupId } = req.params;
+        const { userIds } = req.body;
+        const usersGroup = await groupService.addUsers(groupId as string, userIds);
+        res.status(201).json(usersGroup);
+    } catch (error) {
+        next(error);
+    }
+};
+
+export default { getAll, getById, create, update, remove, addUsers };
