@@ -2,6 +2,8 @@
 import { db } from './../database/db';
 import { Group, IGroup, GroupModel } from '../model/group';
 import { UserGroup, UserGroupModel } from '../model/user-group';
+import HttpException from '../common/http-exception';
+import { getErrorMessage } from '../utils/utils';
 
 export interface IGroupRepository {
     getAll(): Promise<GroupModel[]>,
@@ -9,7 +11,7 @@ export interface IGroupRepository {
     create(group: IGroup): Promise<GroupModel>,
     updateOne(id: string, payload: IGroup): Promise<GroupModel | undefined>,
     removeOne(id: string): Promise<boolean>,
-    addUsers(groupId: string, userIds: string[]): Promise<UserGroupModel[]>,
+    addUsers(groupId: string, userIds: string[]): Promise<UserGroupModel[] | undefined>,
 }
 export class GroupRepository implements IGroupRepository {
     getAll = () => Group.findAll();
@@ -33,6 +35,10 @@ export class GroupRepository implements IGroupRepository {
 
     addUsers = async (groupId: string, userIds: string[]) => {
         const usersAndGroup = userIds.map((userId) => ({ userId, groupId }));
-        return await db.transaction(async (t) => await UserGroup.bulkCreate(usersAndGroup, { transaction: t }));
+        try {
+            return await db.transaction(async (t) => await UserGroup.bulkCreate(usersAndGroup, { transaction: t }));
+        } catch (error) {
+            throw new HttpException(400, getErrorMessage(error));
+        }
     };
 }

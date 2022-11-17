@@ -7,10 +7,6 @@ import { GroupRepository } from '../repository/group';
 const groupRepository = new GroupRepository();
 const groupService = new GroupService(groupRepository);
 
-const groupNotFoundMessage = {
-    message: 'Error! Group not found.'
-};
-
 const getAll = async (_req: Request, res: Response, next: NextFunction) => {
     try {
         const group = await groupService.getAll();
@@ -25,11 +21,7 @@ const getById = async (req: Request, res: Response, next: NextFunction) => {
         const { id } = req.params;
         const group = await groupService.getById(id as string);
 
-        if (group) {
-            res.json(group);
-        } else {
-            res.status(404).json(groupNotFoundMessage);
-        }
+        res.json(group);
     } catch (error) {
         next(error);
     }
@@ -50,11 +42,7 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
         const { id } = req.params;
         const group = await groupService.update(id as string, req.body);
 
-        if (group) {
-            res.json(group);
-        } else {
-            res.status(404).json(groupNotFoundMessage);
-        }
+        res.json(group);
     } catch (error) {
         next(error);
     }
@@ -63,13 +51,9 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 const remove = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { id } = req.params;
-        const isDelete = await groupService.remove(id as string);
+        await groupService.remove(id as string);
 
-        if (isDelete) {
-            res.status(204).json();
-        } else {
-            res.status(404).json(groupNotFoundMessage);
-        }
+        res.status(204).json();
     } catch (error) {
         next(error);
     }

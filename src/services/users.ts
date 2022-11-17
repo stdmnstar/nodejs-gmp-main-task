@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+import HttpException from '../common/http-exception';
 import { IUser } from '../model/user';
 import { IUserRepository } from '../repository/user';
 
@@ -17,11 +18,24 @@ export class UserService implements IUserService {
 
     getAll = (loginSubstring: string, limit: number) => this.userRepository.getAll(loginSubstring, limit);
 
-    getById = (id: string) => this.userRepository.getById(id);
+    getById = async (id: string) => {
+        const user = await this.userRepository.getById(id);
+        if (!user) throw new HttpException(404, 'User not found');
+        return user;
+    };
 
     create = (data: IUser) => this.userRepository.create(data);
 
-    update = (id: string, data: IUser) => this.userRepository.updateOne(id, data);
+    update = async (id: string, data: IUser) => {
+        const user = await this.userRepository.updateOne(id, data);
+        if (!user) throw new HttpException(404, 'User not found');
+        return user;
+    };
 
-    remove = (id: string) => this.userRepository.removeOne(id);
+
+    remove = async (id: string) => {
+        const isDelete = await this.userRepository.removeOne(id);
+        if (!isDelete) throw new HttpException(404, 'User not found');
+        return isDelete;
+    };
 }

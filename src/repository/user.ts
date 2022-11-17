@@ -40,10 +40,8 @@ export class UserRepository implements IUserRepository {
         });
     };
 
-    create = async (user: IUser) => {
-        // const { id, login, password, age, isDeleted } = user;
-        return User.create({ ...user }, { returning: true });
-    };
+    create = async (user: IUser) => User.create({ ...user }, { returning: true });
+
 
     updateOne = async (id: string, payload: IUser) => {
         const [, [updatedUser]] = await User.update(payload, {
