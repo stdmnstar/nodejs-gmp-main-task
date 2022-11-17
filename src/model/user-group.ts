@@ -4,7 +4,14 @@ import { db } from '../database/db';
 import { Group } from './group';
 import { User } from './user';
 
-export const UserGroup = db.define<Model>(
+export interface IUsersGroup {
+    userIds: string[];
+    groupId: string;
+}
+
+export type UserGroupModel = IUsersGroup & Model;
+
+export const UserGroup = db.define<UserGroupModel>(
     'UserGroup',
     {},
     {

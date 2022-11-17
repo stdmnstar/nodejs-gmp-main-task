@@ -5,6 +5,7 @@ import path from 'path';
 import YAML from 'yamljs';
 import { usersRouter } from './routes/users';
 import { groupsRouter } from './routes/groups';
+import { usersGroupRouter } from './routes/users-group';
 import { errorHandler } from './middleware/error-handler';
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/doc', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
 app.use('/users', usersRouter);
 app.use('/groups', groupsRouter);
+app.use('/users-group', usersGroupRouter);
 
 app.use(errorHandler);
 

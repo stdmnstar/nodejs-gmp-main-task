@@ -1,6 +1,4 @@
 import { Router } from 'express';
-// import { userSchema } from '../validation/schema';
-// import { validateSchema } from '../middleware/validation';
 import groupsController from '../controllers/groups';
 
 export const groupsRouter = Router();

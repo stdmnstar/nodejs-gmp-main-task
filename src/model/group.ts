@@ -34,5 +34,3 @@ export const Group = db.define<GroupModel>(
     },
 );
 
-// Group.sync({ alter: true });
-

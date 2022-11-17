@@ -18,14 +18,6 @@ module.exports = {
                 allowNull: false,
                 type: Sequelize.ARRAY(Sequelize.ENUM('READ', 'WRITE', 'DELETE', 'SHARE', 'UPLOAD_FILES'))
             }
-            // createdAt: {
-            //     allowNull: false,
-            //     type: Sequelize.DATE
-            // },
-            // updatedAt: {
-            //     allowNull: false,
-            //     type: Sequelize.DATE
-            // }
         });
     },
     // eslint-disable-next-line no-unused-vars
