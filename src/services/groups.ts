@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import HttpException from '../common/http-exception';
+import { trackTime } from '../decorators/track-time';
 import { IGroup } from '../model/group';
 import { IUsersGroup } from '../model/user-group';
 import { IGroupRepository } from '../repository/group';
@@ -18,28 +19,39 @@ export class GroupService implements IGroupService {
         this.groupRepository = groupRepository;
     }
 
-    getAll = () => this.groupRepository.getAll();
+    @trackTime
+    async getAll() {
+        return this.groupRepository.getAll();
+    }
 
-    getById = async (id: string) => {
+    @trackTime
+    async getById(id: string) {
         const group = await this.groupRepository.getById(id);
-        if (!group) throw new HttpException(404, 'Group not found');
+        if (!group) throw new HttpException('Group not found', 404);
         return group;
-    };
+    }
 
-    create = (data: IGroup) => this.groupRepository.create(data);
+    @trackTime
+    async create(data: IGroup) {
+        return this.groupRepository.create(data);
+    }
 
-    update = async (id: string, data: IGroup) => {
+    @trackTime
+    async update(id: string, data: IGroup) {
         const group = await this.groupRepository.updateOne(id, data);
-        if (!group) throw new HttpException(404, 'Group not found');
+        if (!group) throw new HttpException('Group not found', 404);
         return group;
-    };
+    }
 
-    remove = async (id: string) => {
+    @trackTime
+    async remove(id: string) {
         const isDelete = await this.groupRepository.removeOne(id);
-        if (!isDelete) throw new HttpException(404, 'Group not found');
+        if (!isDelete) throw new HttpException('Group not found', 404);
         return isDelete;
-    };
+    }
 
-
-    addUsers = (groupId: string, userIds: string[]) => this.groupRepository.addUsers(groupId, userIds);
+    @trackTime
+    async addUsers(groupId: string, userIds: string[]) {
+        return this.groupRepository.addUsers(groupId, userIds);
+    }
 }

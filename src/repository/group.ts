@@ -38,7 +38,7 @@ export class GroupRepository implements IGroupRepository {
         try {
             return await db.transaction(async (t) => await UserGroup.bulkCreate(usersAndGroup, { transaction: t }));
         } catch (error) {
-            throw new HttpException(400, getErrorMessage(error));
+            throw new HttpException(getErrorMessage(error), 400);
         }
     };
 }

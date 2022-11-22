@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 import HttpException from '../common/http-exception';
+import { trackTime } from '../decorators/track-time';
 import { IUser } from '../model/user';
 import { IUserRepository } from '../repository/user';
 
@@ -16,26 +17,34 @@ export class UserService implements IUserService {
         this.userRepository = userRepository;
     }
 
-    getAll = (loginSubstring: string, limit: number) => this.userRepository.getAll(loginSubstring, limit);
+    @trackTime
+    async getAll(loginSubstring: string, limit: number) {
+        return  this.userRepository.getAll(loginSubstring, limit);
+    }
 
-    getById = async (id: string) => {
+    @trackTime
+    async getById(id: string) {
         const user = await this.userRepository.getById(id);
-        if (!user) throw new HttpException(404, 'User not found');
+        if (!user) throw new HttpException('User not found', 404);
         return user;
-    };
+    }
 
-    create = (data: IUser) => this.userRepository.create(data);
+    @trackTime
+    async create(data: IUser) {
+        return  this.userRepository.create(data);
+    }
 
-    update = async (id: string, data: IUser) => {
+    @trackTime
+    async update(id: string, data: IUser) {
         const user = await this.userRepository.updateOne(id, data);
-        if (!user) throw new HttpException(404, 'User not found');
+        if (!user) throw new HttpException('User not found', 404);
         return user;
-    };
+    }
 
-
-    remove = async (id: string) => {
+    @trackTime
+    async remove(id: string)  {
         const isDelete = await this.userRepository.removeOne(id);
-        if (!isDelete) throw new HttpException(404, 'User not found');
+        if (!isDelete) throw new HttpException('User not found', 404);
         return isDelete;
-    };
+    }
 }

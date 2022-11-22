@@ -64,6 +64,7 @@
     "sequelize-cli": "^6.5.2",
     "swagger-ui-express": "^4.6.0",
     "uuid": "^9.0.0",
+    "winston": "^3.8.2",
     "yamljs": "^0.3.0"
   }
 }

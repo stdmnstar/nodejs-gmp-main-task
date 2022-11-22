@@ -3,6 +3,8 @@ import { Response, Request, NextFunction } from 'express';
 import { v4 as uuid } from 'uuid';
 import { GroupService } from '../services/groups';
 import { GroupRepository } from '../repository/group';
+import HttpException from '../common/http-exception';
+import { getErrorMessage, getErrorStatusCode } from '../utils/utils';
 
 const groupRepository = new GroupRepository();
 const groupService = new GroupService(groupRepository);
@@ -12,7 +14,7 @@ const getAll = async (_req: Request, res: Response, next: NextFunction) => {
         const group = await groupService.getAll();
         res.json(group);
     } catch (error) {
-        next(error);
+        next(new HttpException(getErrorMessage(error), getErrorStatusCode(error), 'getAll'));
     }
 };
 
@@ -23,7 +25,7 @@ const getById = async (req: Request, res: Response, next: NextFunction) => {
 
         res.json(group);
     } catch (error) {
-        next(error);
+        next(new HttpException(getErrorMessage(error), getErrorStatusCode(error), 'getById'));
     }
 };
 
@@ -33,7 +35,7 @@ const create = async (req: Request, res: Response, next: NextFunction) => {
         const group = await groupService.create({ id: uuid(), ...body });
         res.status(201).json(group);
     } catch (error) {
-        next(error);
+        next(new HttpException(getErrorMessage(error), getErrorStatusCode(error), 'create'));
     }
 };
 
@@ -44,7 +46,7 @@ export const update = async (req: Request, res: Response, next: NextFunction) =>
 
         res.json(group);
     } catch (error) {
-        next(error);
+        next(new HttpException(getErrorMessage(error), getErrorStatusCode(error), 'update'));
     }
 };
 
@@ -55,7 +57,7 @@ const remove = async (req: Request, res: Response, next: NextFunction) => {
 
         res.status(204).json();
     } catch (error) {
-        next(error);
+        next(new HttpException(getErrorMessage(error), getErrorStatusCode(error), 'remove'));
     }
 };
 
@@ -66,7 +68,7 @@ const addUsers = async (req: Request, res: Response, next: NextFunction) => {
         const usersGroup = await groupService.addUsers(groupId as string, userIds);
         res.status(201).json(usersGroup);
     } catch (error) {
-        next(error);
+        next(new HttpException(getErrorMessage(error), getErrorStatusCode(error), 'addUsers'));
     }
 };
 

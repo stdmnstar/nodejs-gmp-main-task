@@ -6,6 +6,7 @@ dotenv.config({
 });
 
 export default {
+    NODE_ENV: process.env['NODE_ENV'],
     PORT: process.env['PORT'],
     POSTGRES_DATABASE: process.env['POSTGRES_DATABASE'],
     POSTGRES_USER_NAME: process.env['POSTGRES_USER_NAME'],
