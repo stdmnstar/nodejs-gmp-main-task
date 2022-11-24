@@ -19,38 +19,38 @@ export class GroupService implements IGroupService {
         this.groupRepository = groupRepository;
     }
 
-    @trackTime
+    @trackTime('GroupService')
     async getAll() {
         return this.groupRepository.getAll();
     }
 
-    @trackTime
+    @trackTime('GroupService')
     async getById(id: string) {
         const group = await this.groupRepository.getById(id);
         if (!group) throw new HttpException('Group not found', 404);
         return group;
     }
 
-    @trackTime
+    @trackTime('GroupService')
     async create(data: IGroup) {
         return this.groupRepository.create(data);
     }
 
-    @trackTime
+    @trackTime('GroupService')
     async update(id: string, data: IGroup) {
         const group = await this.groupRepository.updateOne(id, data);
         if (!group) throw new HttpException('Group not found', 404);
         return group;
     }
 
-    @trackTime
+    @trackTime('GroupService')
     async remove(id: string) {
         const isDelete = await this.groupRepository.removeOne(id);
         if (!isDelete) throw new HttpException('Group not found', 404);
         return isDelete;
     }
 
-    @trackTime
+    @trackTime('GroupService')
     async addUsers(groupId: string, userIds: string[]) {
         return this.groupRepository.addUsers(groupId, userIds);
     }

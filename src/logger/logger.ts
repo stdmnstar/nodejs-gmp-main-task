@@ -1,4 +1,4 @@
-import { createLogger, format, addColors, transports } from 'winston';
+import { createLogger, format, transports } from 'winston';
 import config from '../config';
 
 const levels = {
@@ -15,19 +15,8 @@ const level = () => {
     return isDevelopment ? 'debug' : 'warn';
 };
 
-const colors = {
-    error: 'red',
-    warn: 'yellow',
-    info: 'green',
-    http: 'magenta',
-    debug: 'white'
-};
-
-addColors(colors);
-
 const winstonFormat = format.combine(
     format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss:ms' }),
-    format.colorize({ all: true }),
     format.printf(
         ({ timestamp, level: infoLevel, message }) => `${timestamp} ${infoLevel}: ${message}`,
     )
