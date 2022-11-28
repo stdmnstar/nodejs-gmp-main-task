@@ -1,0 +1,386 @@
+openapi: 3.0.0
+info:
+  title: NodeJs Global mentoring program
+  description: NodeJs Global mentoring program
+  version: 1.0.0
+
+servers:
+  - url: /
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        login:
+          type: string
+        password:
+          type: string
+        age:
+          type: number
+        isDeleted:
+          type: boolean
+    Group:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        permissions:
+          type: array
+          items:
+            type: string
+            enum: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+  responses:
+    LoginError:
+      description: Bad login/password combination
+    UnauthorizedError:
+      description: Unauthorized
+    ForbiddenError:
+      description: Forbidden
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:  
+  /login:
+    post:
+      tags:
+        - login
+      summary: Get jwt token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+             schema:
+              type: object
+              title: example
+              properties:
+                token:
+                  type: string
+        401:
+          $ref: '#/components/responses/LoginError'
+  /users:
+    get:
+      parameters:
+        - name: loginSubstring
+          in: query
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: number
+      tags:
+        - Users
+      summary: Get all users
+      description: Gets all users
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+    post:
+      tags:
+        - Users
+      summary: Create user
+      description: Creates a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                  description: The user's login
+                password:
+                  type: string
+                  description: The user's password
+                age:
+                  type: number
+                  description: The user's age
+              required:
+                - login
+                - password
+                - age
+      responses:
+        201:
+          description: The user has been created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad request
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Users
+      summary: Get user by ID
+      description: Gets a user by ID
+        e.g. “/users/123”
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          description: User not found
+    put:
+      tags:
+        - Users
+      summary: Update a user
+      description: Updates a user by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                  description: The user's login
+                password:
+                  type: string
+                  description: The user's password
+                age:
+                  type: number
+                  description: The user's age
+              required:
+                - login
+                - password
+                - age
+      responses:
+        200:
+          description: The user has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Bad request
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+    delete:
+      tags:
+        - Users
+      summary: Delete user
+      description: Remove user by ID.
+      responses:
+        204:
+          description: The user has been deleted
+        403:
+          $ref: '#/components/responses/ForbiddenError'  
+        404:
+          description: User not found
+  /groups:
+    get:
+      tags:
+        - Groups
+      summary: Get all groups
+      description: Gets all groups
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Group"
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+    post:
+      tags:
+        - Groups
+      summary: Create group
+      description: Creates a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                name:
+                  type: string
+                  description: The group's name
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    enum: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+                  description: The group's permissions
+                  example: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+              required:
+                - name
+                - permissions
+      responses:
+        201:
+          description: The group has been created.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        400:
+          description: Bad request
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+  /groups/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      tags:
+        - Groups
+      summary: Get group by ID
+      description: Gets a group by ID
+        e.g. “/groups/123”
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          description: Group not found
+    put:
+      tags:
+        - Groups
+      summary: Update a group
+      description: Updates a group by ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                name:
+                  type: string
+                  description: The group's name
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    enum: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+                  description: The group's permissions
+                  example: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
+              required:
+                - name
+                - permissions
+      responses:
+        200:
+          description: The group has been updated.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Group"
+        400:
+          description: Bad request
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+    delete:
+      tags:
+        - Groups
+      summary: Delete group
+      description: Delete group by ID.
+      responses:
+        204:
+          description: The group has been deleted
+        403:
+          $ref: '#/components/responses/ForbiddenError'
+        404:
+          description: Group not found
+  /groups/{id}/users:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+    post:
+      tags:
+        - Groups
+      summary: Adds Users to Group
+      description: Adds Users to Group
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                userIds:
+                  type: array
+                  items:
+                    type: string
+                  example: [user-id1, user-id2, user-id3]
+
+      responses:
+        201:
+          description: The group has been created.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    userId:
+                      type: string
+                    groupId:
+                      type: string
+        403:
+          $ref: '#/components/responses/ForbiddenError'
