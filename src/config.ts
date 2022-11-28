@@ -12,5 +12,7 @@ export default {
     POSTGRES_USER_NAME: process.env['POSTGRES_USER_NAME'],
     POSTGRES_PASSWORD: process.env['POSTGRES_PASSWORD'],
     POSTGRES_HOST: process.env['POSTGRES_HOST'],
-    POSTGRES_PORT: process.env['POSTGRES_PORT']
+    POSTGRES_PORT: process.env['POSTGRES_PORT'],
+    JWT_SECRET: process.env['JWT_SECRET'],
+    EXPIRE_TIME: process.env['EXPIRE_TIME']
 };

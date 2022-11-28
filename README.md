@@ -1,6 +1,6 @@
 # nodejs-gmp-main-task
 
-# Task 5
+# Task 6
 
 ## 1. Main setup
 * you have to have postgres server running locally

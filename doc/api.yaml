@@ -34,7 +34,51 @@ components:
           items:
             type: string
             enum: [READ, WRITE, DELETE, SHARE, UPLOAD_FILES]
-paths:
+  responses:
+    LoginError:
+      description: Bad login/password combination
+    UnauthorizedError:
+      description: Unauthorized
+    ForbiddenError:
+      description: Forbidden
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+security:
+  - bearerAuth: []
+paths:  
+  /login:
+    post:
+      tags:
+        - login
+      summary: Get jwt token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              title: example
+              properties:
+                login:
+                  type: string
+                password:
+                  type: string
+      responses:
+        200:
+          description: Successful operation
+          content:
+            application/json:
+             schema:
+              type: object
+              title: example
+              properties:
+                token:
+                  type: string
+        401:
+          $ref: '#/components/responses/LoginError'
   /users:
     get:
       parameters:
@@ -59,6 +103,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/User"
+        403:
+          $ref: '#/components/responses/ForbiddenError'
     post:
       tags:
         - Users
@@ -94,6 +140,8 @@ paths:
                 $ref: "#/components/schemas/User"
         400:
           description: Bad request
+        403:
+          $ref: '#/components/responses/ForbiddenError'
   /users/{id}:
     parameters:
       - name: id
@@ -114,6 +162,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        403:
+          $ref: '#/components/responses/ForbiddenError'
         404:
           description: User not found
     put:
@@ -151,6 +201,8 @@ paths:
                 $ref: "#/components/schemas/User"
         400:
           description: Bad request
+        403:
+          $ref: '#/components/responses/ForbiddenError'
     delete:
       tags:
         - Users
@@ -159,6 +211,8 @@ paths:
       responses:
         204:
           description: The user has been deleted
+        403:
+          $ref: '#/components/responses/ForbiddenError'  
         404:
           description: User not found
   /groups:
@@ -176,6 +230,8 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Group"
+        403:
+          $ref: '#/components/responses/ForbiddenError'
     post:
       tags:
         - Groups
@@ -211,6 +267,8 @@ paths:
                 $ref: "#/components/schemas/Group"
         400:
           description: Bad request
+        403:
+          $ref: '#/components/responses/ForbiddenError'
   /groups/{id}:
     parameters:
       - name: id
@@ -231,6 +289,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Group"
+        403:
+          $ref: '#/components/responses/ForbiddenError'
         404:
           description: Group not found
     put:
@@ -268,6 +328,8 @@ paths:
                 $ref: "#/components/schemas/Group"
         400:
           description: Bad request
+        403:
+          $ref: '#/components/responses/ForbiddenError'
     delete:
       tags:
         - Groups
@@ -276,6 +338,8 @@ paths:
       responses:
         204:
           description: The group has been deleted
+        403:
+          $ref: '#/components/responses/ForbiddenError'
         404:
           description: Group not found
   /groups/{id}/users:
@@ -318,3 +382,5 @@ paths:
                       type: string
                     groupId:
                       type: string
+        403:
+          $ref: '#/components/responses/ForbiddenError'

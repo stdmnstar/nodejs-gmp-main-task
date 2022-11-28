@@ -5,6 +5,7 @@ import { User, IUser, UserModel } from '../model/user';
 export interface IUserRepository {
     getAll(loginSubstring: string, limit: number): Promise<UserModel[]>,
     getById(id: string): Promise<UserModel | null>,
+    getByLogin(login: string): Promise<UserModel | null>,
     create(user: IUser): Promise<UserModel>,
     updateOne(id: string, payload: IUser): Promise<UserModel | undefined>,
     removeOne(id: string): Promise<boolean>,
@@ -35,6 +36,15 @@ export class UserRepository implements IUserRepository {
         return await User.findOne({
             where: {
                 id,
+                isDeleted: false
+            }
+        });
+    };
+
+    getByLogin = async (login: string) => {
+        return await User.findOne({
+            where: {
+                login,
                 isDeleted: false
             }
         });
