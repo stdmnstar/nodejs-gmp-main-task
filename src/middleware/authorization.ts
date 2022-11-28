@@ -1,3 +1,4 @@
+/* eslint-disable callback-return */
 import jsonwebtoken from 'jsonwebtoken';
 import { NextFunction, Request, Response } from 'express';
 import config from '../config';
@@ -9,13 +10,11 @@ export const authorization = (req: Request, _res: Response, next: NextFunction) 
 
     if (!token) {
         next(new HttpException('Unauthorized', 401));
-        return;
     }
 
     jsonwebtoken.verify(token as string, config.JWT_SECRET as string, (err: any) => {
         if (err) {
             next(new HttpException('Forbidden', 403));
-            return;
         }
         next();
     });

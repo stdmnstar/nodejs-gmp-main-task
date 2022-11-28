@@ -1,4 +1,5 @@
 /* eslint-disable callback-return */
+
 import { Response, Request, NextFunction } from 'express';
 import { v4 as uuid } from 'uuid';
 import { GroupService } from '../services/groups';
